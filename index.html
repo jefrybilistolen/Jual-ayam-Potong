@@ -53,7 +53,32 @@ input, select, textarea {
   font-size: 14px;
 }
 
-button {
+/* tombol pengambilan */
+.option-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+  margin-bottom: 12px;
+}
+
+.option-btn {
+  flex: 1;
+  height: 40px; /* ±1cm */
+  border: 1px solid #2e7d32;
+  background: #e8f5e9;
+  color: #2e7d32;
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.option-btn.active {
+  background: #2e7d32;
+  color: white;
+}
+
+button.main {
   width: 100%;
   padding: 12px;
   background: #2e7d32;
@@ -65,7 +90,7 @@ button {
   cursor: pointer;
 }
 
-button:hover {
+button.main:hover {
   background: #1b5e20;
 }
 </style>
@@ -130,20 +155,29 @@ button:hover {
   <option>22 potong</option>
 </select>
 
-<select id="pengambilan">
-  <option value="">Pilih Pengambilan</option>
-  <option>Ambil di tempat</option>
-  <option>Diantar ke rumah</option>
-</select>
+<!-- PENGAMBILAN (BUTTON TOGGLE) -->
+<label><b>Pengambilan</b></label>
+<div class="option-group">
+  <button type="button" class="option-btn" onclick="setPengambilan(this,'Ambil di tempat')">Ambil di tempat</button>
+  <button type="button" class="option-btn" onclick="setPengambilan(this,'Diantar ke rumah')">Antar ke rumah</button>
+</div>
 
 <textarea id="alamat" placeholder="Alamat lengkap"></textarea>
 
-<button onclick="kirimWA()">📲 Pesan Sekarang via WhatsApp</button>
+<button class="main" onclick="kirimWA()">📲 Pesan Sekarang via WhatsApp</button>
 
 </div>
 </div>
 
 <script>
+
+let pengambilanTerpilih = "";
+
+function setPengambilan(el, value) {
+  document.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('active'));
+  el.classList.add('active');
+  pengambilanTerpilih = value;
+}
 
 function togglePotongan() {
   var layanan = document.getElementById('layanan').value;
@@ -169,7 +203,6 @@ function kirimWA() {
   var layanan = document.getElementById('layanan').value;
   var potongan = document.getElementById('potongan').value;
   var alamat = document.getElementById('alamat').value;
-  var pengambilan = document.getElementById('pengambilan').value;
 
   var pesan =
 `*Halo kaka, Saya mau pesan Ayam..*
@@ -180,7 +213,7 @@ Jenis   : *${jenis}*
 Jumlah  : *${jumlah} ekor*
 Harga   : *${hargaText}*
 Layanan : *${layanan}*
-${potongan ? "Potongan : *" + potongan + "*\n" : ""}Pengambilan: *${pengambilan}*
+${potongan ? "Potongan : *" + potongan + "*\n" : ""}Pengambilan: *${pengambilanTerpilih}*
 Alamat: *${alamat}*`;
 
   var nomor = "6282278861707";
